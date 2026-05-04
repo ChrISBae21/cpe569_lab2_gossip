@@ -25,18 +25,18 @@ var (
 // Send the current membership table to a neighboring node with the provided ID
 func sendMessage(id int, membership shared.Membership) {
 	select {
-	case inboxes[id] <- membership:
-	default: // don't block if inbox is full
+		case inboxes[id] <- membership:
+		default: // don't block if inbox is full
 	}
 }
 
 // Read incoming messages and merge with current membership table
 func readMessages(id int, membership shared.Membership) *shared.Membership {
 	select {
-	case incoming := <-inboxes[id]:
-		return shared.CombineTables(&membership, &incoming)
-	default:
-		return &membership
+		case incoming := <-inboxes[id]:
+			return shared.CombineTables(&membership, &incoming)
+		default:
+			return &membership
 	}
 }
 
