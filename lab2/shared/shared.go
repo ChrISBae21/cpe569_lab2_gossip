@@ -2,6 +2,7 @@ package shared
 
 import (
 	"math/rand"
+	"sync"
 	"time"
 )
 
@@ -46,6 +47,7 @@ func RandInt() int {
 
 // Membership struct represents participanting nodes
 type Membership struct {
+	mu      sync.RWMutex
 	Members map[int]Node // map named Members with key: int, value: Node
 }
 
@@ -58,6 +60,8 @@ func NewMembership() *Membership {
 
 // Adds a node to the membership list.
 func (m *Membership) Add(payload Node, reply *Node) error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	m.Members[payload.ID] = payload
 	*reply = payload
 	return nil
@@ -70,6 +74,8 @@ func (m *Membership) Update(payload Node, reply *Node) error {
 
 // Returns a node with specific ID.
 func (m *Membership) Get(payload int, reply *Node) error {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
 	*reply = m.Members[payload]
 	return nil
 }
@@ -84,6 +90,7 @@ type Request struct {
 
 // Requests struct represents pending message requests
 type Requests struct {
+	mu      sync.Mutex
 	Pending map[int]Membership
 }
 
@@ -96,6 +103,8 @@ func NewRequests() *Requests {
 
 // Adds a new message request to the pending list
 func (req *Requests) Add(payload Request, reply *bool) error {
+	req.mu.Lock()
+	defer req.mu.Unlock()
 
 	// check to see if a different node already made a request to this node
 	existing, ok := req.Pending[payload.ID]
@@ -103,7 +112,7 @@ func (req *Requests) Add(payload Request, reply *bool) error {
 	if ok {
 		merged := CombineTables(&existing, &payload.Table)
 		req.Pending[payload.ID] = *merged
-	} else {	// otherwise create a new request
+	} else { // otherwise create a new request
 		req.Pending[payload.ID] = payload.Table
 	}
 	*reply = true
@@ -112,6 +121,8 @@ func (req *Requests) Add(payload Request, reply *bool) error {
 
 // Listens to communication from neighboring nodes.
 func (req *Requests) Listen(ID int, reply *Membership) error {
+	req.mu.Lock()
+	defer req.mu.Unlock()
 
 	// proceed only if there is a pending request
 	table, ok := req.Pending[ID]
@@ -126,12 +137,13 @@ func (req *Requests) Listen(ID int, reply *Membership) error {
 func CombineTables(table1 *Membership, table2 *Membership) *Membership {
 	combined := NewMembership()
 
-	// get a copy of the first table
+	table1.mu.RLock()
 	for id, node := range table1.Members {
 		combined.Members[id] = node
 	}
+	table1.mu.RUnlock()
 
-	// start comparing with the second table
+	table2.mu.RLock()
 	for id, t2_node := range table2.Members {
 		t1_node, ok := combined.Members[id]
 		// add if the node doesn't exist in t1's membership OR
@@ -140,7 +152,8 @@ func CombineTables(table1 *Membership, table2 *Membership) *Membership {
 			combined.Members[id] = t2_node
 		}
 	}
-	return combined
+	table2.mu.RUnlock()
 
+	return combined
 }
 
