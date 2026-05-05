@@ -32,11 +32,11 @@ func main() {
 	}
 
 	// two nodes propose conflicting values concurrently
-	go propose(nodes[0], 42)
+	go propose(nodes[0], 99)
 	go func() {
 		// slight delay so both proposals are in flight simultaneously
-		time.Sleep(50 * time.Millisecond)
-		propose(nodes[2], 99)
+		// time.Sleep(50 * time.Millisecond)
+		propose(nodes[2], 42)
 	}()
 
 	// wait long enough for consensus and any retries to complete
