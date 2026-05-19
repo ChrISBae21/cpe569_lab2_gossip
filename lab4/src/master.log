@@ -1,0 +1,12 @@
+{"Type":"ASSIGN","TaskID":0,"TaskType":"map","WorkerID":2,"Phase":"","Time":"2026-05-18T13:32:58.1865558-07:00"}
+{"Type":"ASSIGN","TaskID":1,"TaskType":"map","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.1865558-07:00"}
+{"Type":"COMPLETE","TaskID":0,"TaskType":"map","WorkerID":2,"Phase":"","Time":"2026-05-18T13:32:58.2728225-07:00"}
+{"Type":"COMPLETE","TaskID":1,"TaskType":"map","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.2777861-07:00"}
+{"Type":"PHASE","TaskID":0,"TaskType":"","WorkerID":0,"Phase":"reduce","Time":"2026-05-18T13:32:58.2777861-07:00"}
+{"Type":"ASSIGN","TaskID":0,"TaskType":"reduce","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.2777861-07:00"}
+{"Type":"COMPLETE","TaskID":0,"TaskType":"reduce","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.2982393-07:00"}
+{"Type":"ASSIGN","TaskID":1,"TaskType":"reduce","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.2982393-07:00"}
+{"Type":"COMPLETE","TaskID":1,"TaskType":"reduce","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.3153529-07:00"}
+{"Type":"ASSIGN","TaskID":2,"TaskType":"reduce","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.3153529-07:00"}
+{"Type":"COMPLETE","TaskID":2,"TaskType":"reduce","WorkerID":1,"Phase":"","Time":"2026-05-18T13:32:58.335394-07:00"}
+{"Type":"PHASE","TaskID":0,"TaskType":"","WorkerID":0,"Phase":"done","Time":"2026-05-18T13:32:58.335394-07:00"}
